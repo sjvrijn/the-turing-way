@@ -26,12 +26,18 @@ def update_citation_file(citation_file_path):
                 minor = 0
                 major = major + 1
 
-            version_number_str = str(major) + "." + str(minor) + "." + str(tiny) + "\n"
+            version_number_str = f"{str(major)}.{str(minor)}.{str(tiny)}" + "\n"
 
-            file_content[idx] = "version: " + version_number_str
-        elif ("date-released:" in word_array):
+            file_content[idx] = f"version: {version_number_str}"
+        elif "date-released:" in word_array:
 
-            file_content[idx] = "date-released: " + "\"" + datetime.today().strftime("%Y-%m-%d") + "\" \n"
+            file_content[idx] = (
+                "date-released: "
+                + "\""
+                + datetime.now().strftime("%Y-%m-%d")
+                + "\" \n"
+            )
+
         else:
             file_content[idx] = line
 

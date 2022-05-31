@@ -30,14 +30,10 @@ def get_files_from_pr(pr_num):
     Returns:
         {list} -- List of modified filenames
     """
-    files = []
     pr_url = f"https://api.github.com/repos/alan-turing-institute/the-turing-way/pulls/{pr_num}/files"
     resp = requests.get(pr_url)
 
-    for item in resp.json():
-        files.append(item["filename"])
-
-    return files
+    return [item["filename"] for item in resp.json()]
 
 
 def filter_files(pr_num, start_phrase="book/website", ignore_suffix=None):
@@ -57,16 +53,15 @@ def filter_files(pr_num, start_phrase="book/website", ignore_suffix=None):
         {list} -- List of filenames that begin with the desired start phrase
     """
     files = get_files_from_pr(pr_num)
-    filtered_files = []
-
     if ignore_suffix is None:
         ignore_suffix = ()
 
-    for filename in files:
-        if filename.startswith(start_phrase) and not filename.endswith(ignore_suffix):
-            filtered_files.append(filename)
-
-    return filtered_files
+    return [
+        filename
+        for filename in files
+        if filename.startswith(start_phrase)
+        and not filename.endswith(ignore_suffix)
+    ]
 
 
 if __name__ == "__main__":

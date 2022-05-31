@@ -33,8 +33,7 @@ def remove_comments(text_string):
 	Returns:
 		{string} -- The input text string with html comments removed
 	"""
-    p = re.sub("(?s)<!--(.*?)-->", "", text_string)
-    return p
+    return re.sub("(?s)<!--(.*?)-->", "", text_string)
 
 
 def check_changed_files(pr_num, bad_phrase=BAD_PHRASE):

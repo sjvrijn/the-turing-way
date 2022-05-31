@@ -34,8 +34,7 @@ def remove_comments(text_string):
     Returns:
         {string} -- The input text string with html comments removed
     """
-    p = re.sub("(?s)<!--(.*?)-->", "", text_string)
-    return p
+    return re.sub("(?s)<!--(.*?)-->", "", text_string)
 
 
 def get_lines(text_string, sub_string):
@@ -49,8 +48,7 @@ def get_lines(text_string, sub_string):
     Returns:
         {list} -- A list of split strings
     """
-    lines = [line for line in text_string.split("\n") if sub_string in line]
-    return lines
+    return [line for line in text_string.split("\n") if sub_string in line]
 
 
 def construct_error_message(files_dict):
@@ -67,10 +65,10 @@ def construct_error_message(files_dict):
     """
     error_message = ["Bad latin found in the following files:\n"]
 
-    for file in files_dict.keys():
-        error_message.append(
-            f"{file}:\t{files_dict[file]['latin_type']}\tfound in line\t[{files_dict[file]['line']}]\n"
-        )
+    error_message.extend(
+        f"{file}:\t{files_dict[file]['latin_type']}\tfound in line\t[{files_dict[file]['line']}]\n"
+        for file in files_dict.keys()
+    )
 
     return "\n".join(error_message)
 
@@ -92,9 +90,7 @@ def read_and_check_files(files):
     bad_latin = ["i.e.", "e.g.", "e.t.c.", " etc", " ie ", "et cetera"]
 
     for filename in files:
-        if os.path.basename(filename) in IGNORE_LIST:
-            pass
-        else:
+        if os.path.basename(filename) not in IGNORE_LIST:
             try:
                 with open(
                 os.path.join(ABSOLUTE_HERE, filename), encoding="utf8",
@@ -130,9 +126,11 @@ def get_all_files(directory=os.path.join(ABSOLUTE_HERE, "book", "website")):
     filetypes_to_ignore = (".png", ".jpg")
 
     for rootdir, _, filenames in os.walk(directory):
-        for filename in filenames:
-            if not filename.endswith(filetypes_to_ignore):
-                files.append(os.path.join(rootdir, filename))
+        files.extend(
+            os.path.join(rootdir, filename)
+            for filename in filenames
+            if not filename.endswith(filetypes_to_ignore)
+        )
 
     return files
 
